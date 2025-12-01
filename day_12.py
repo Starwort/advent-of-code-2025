@@ -45,7 +45,7 @@ aoc_helper.lazy_test(day=12, year=2025, parse=parse_raw, solution=part_one)
 # force type inference to happen, AFAIK - but this won't work with standard
 # collections (list, set, dict, tuple)
 def part_two(data=data):
-    ...
+    return 0
 
 
 aoc_helper.lazy_test(day=12, year=2025, parse=parse_raw, solution=part_two)
