@@ -60,12 +60,17 @@ def part_two(data=data):
     pos = 50
     password = 0
     for right, steps in data:
-        direction = 1 if right else -1
-        for _ in range(steps):
-            pos += direction
-            pos %= 100
-            if pos == 0:
+        loops, steps = divmod(steps, 100)
+        password += loops
+        if right:
+            if pos >= 100 - steps:
                 password += 1
+            pos += steps
+        else:
+            if pos <= steps and pos != 0:
+                password += 1
+            pos -= steps
+        pos %= 100
     return password
 
 
