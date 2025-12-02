@@ -1,4 +1,5 @@
 from collections import Counter, defaultdict, deque
+import re
 
 import aoc_helper
 from aoc_helper import (
@@ -25,7 +26,7 @@ raw = aoc_helper.fetch(2, 2025)
 
 
 def parse_raw(raw: str):
-    return ...
+    return extract_iranges(raw)
 
 
 data = parse_raw(raw)
@@ -35,7 +36,14 @@ data = parse_raw(raw)
 # force type inference to happen, AFAIK - but this won't work with standard
 # collections (list, set, dict, tuple)
 def part_one(data=data):
-    ...
+    total = 0
+    for range in data:
+        for id in range:
+            sid = str(id)
+            left, right = sid[: len(sid) // 2], sid[len(sid) // 2 :]
+            if left == right:
+                total += id
+    return total
 
 
 aoc_helper.lazy_test(day=2, year=2025, parse=parse_raw, solution=part_one)
@@ -45,7 +53,14 @@ aoc_helper.lazy_test(day=2, year=2025, parse=parse_raw, solution=part_one)
 # force type inference to happen, AFAIK - but this won't work with standard
 # collections (list, set, dict, tuple)
 def part_two(data=data):
-    ...
+    pattern = re.compile(r"^(\d+)\1+$")
+    total = 0
+    for range in data:
+        for id in range:
+            sid = str(id)
+            if pattern.match(sid):
+                total += id
+    return total
 
 
 aoc_helper.lazy_test(day=2, year=2025, parse=parse_raw, solution=part_two)
