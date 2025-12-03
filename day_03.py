@@ -46,13 +46,7 @@ def optimise_bank(bank, n_left):
 # force type inference to happen, AFAIK - but this won't work with standard
 # collections (list, set, dict, tuple)
 def part_one(data=data):
-    total = 0
-    for bank in data:
-        first_digit = max(bank[:-1])
-        where = bank.index(first_digit)
-        second_digit = max(bank[where + 1 :])
-        total += first_digit * 10 + second_digit
-    return total
+    return data.mapped(lambda bank: optimise_bank(bank, 2)).sum()
 
 
 aoc_helper.lazy_test(day=3, year=2025, parse=parse_raw, solution=part_one)
