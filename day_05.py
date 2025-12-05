@@ -25,7 +25,10 @@ raw = aoc_helper.fetch(5, 2025)
 
 
 def parse_raw(raw: str):
-    return ...
+    fresh, available = raw.split("\n\n")
+    fresh = extract_iranges(fresh)
+    available = extract_ints(available)
+    return fresh, available
 
 
 data = parse_raw(raw)
@@ -35,7 +38,12 @@ data = parse_raw(raw)
 # force type inference to happen, AFAIK - but this won't work with standard
 # collections (list, set, dict, tuple)
 def part_one(data=data):
-    ...
+    fresh, available = data
+    total = 0
+    for id in available:
+        if fresh.mapped(lambda r: id in r).any():
+            total += 1
+    return total
 
 
 aoc_helper.lazy_test(day=5, year=2025, parse=parse_raw, solution=part_one)
@@ -45,7 +53,8 @@ aoc_helper.lazy_test(day=5, year=2025, parse=parse_raw, solution=part_one)
 # force type inference to happen, AFAIK - but this won't work with standard
 # collections (list, set, dict, tuple)
 def part_two(data=data):
-    ...
+    fresh, _ = data
+    return len(multirange(*fresh))
 
 
 aoc_helper.lazy_test(day=5, year=2025, parse=parse_raw, solution=part_two)
