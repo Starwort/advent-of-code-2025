@@ -39,11 +39,7 @@ data = parse_raw(raw)
 # collections (list, set, dict, tuple)
 def part_one(data=data):
     fresh, available = data
-    total = 0
-    for id in available:
-        if fresh.mapped(lambda r: id in r).any():
-            total += 1
-    return total
+    return available.filtered(lambda id: fresh.mapped(lambda r: id in r).any()).len()
 
 
 aoc_helper.lazy_test(day=5, year=2025, parse=parse_raw, solution=part_one)
