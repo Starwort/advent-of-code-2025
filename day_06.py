@@ -1,3 +1,4 @@
+import re
 from collections import Counter, defaultdict, deque
 
 import aoc_helper
@@ -25,7 +26,10 @@ raw = aoc_helper.fetch(6, 2025)
 
 
 def parse_raw(raw: str):
-    return ...
+    *numbers, ops = raw.splitlines()
+    numbers = list(numbers).mapped(extract_ints).transposition()
+    ops = list(re.findall(r"\+|\*", ops))
+    return numbers, ops
 
 
 data = parse_raw(raw)
@@ -35,7 +39,14 @@ data = parse_raw(raw)
 # force type inference to happen, AFAIK - but this won't work with standard
 # collections (list, set, dict, tuple)
 def part_one(data=data):
-    ...
+    numbers, ops = data
+    result = 0
+    for op, nums in zip(ops, numbers):
+        if op == "+":
+            result += nums.sum()
+        else:
+            result += nums.prod()
+    return result
 
 
 aoc_helper.lazy_test(day=6, year=2025, parse=parse_raw, solution=part_one)
@@ -45,10 +56,27 @@ aoc_helper.lazy_test(day=6, year=2025, parse=parse_raw, solution=part_one)
 # force type inference to happen, AFAIK - but this won't work with standard
 # collections (list, set, dict, tuple)
 def part_two(data=data):
-    ...
+    numbers, ops = data
+    lines = list(raw.splitlines()[:-1])
+    start = 0
+    result = 0
+    for op, nums in zip(ops, numbers):
+        width = max(nums.mapped(str).mapped(len))
+        each_num = (
+            lines.mapped(lambda line: line[start : start + width])
+            .transposition()
+            .mapped("".join)
+            .mapped(int)
+        )
+        start += width + 1
+        if op == "+":
+            result += each_num.sum()
+        else:
+            result += each_num.prod()
+    return result
 
 
-aoc_helper.lazy_test(day=6, year=2025, parse=parse_raw, solution=part_two)
+# aoc_helper.lazy_test(day=6, year=2025, parse=parse_raw, solution=part_two)
 
 aoc_helper.lazy_submit(day=6, year=2025, solution=part_one, data=data)
 aoc_helper.lazy_submit(day=6, year=2025, solution=part_two, data=data)
