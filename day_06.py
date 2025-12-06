@@ -40,13 +40,13 @@ data = parse_raw(raw)
 # collections (list, set, dict, tuple)
 def part_one(data=data):
     numbers, ops = data
-    result = 0
-    for op, nums in zip(ops, numbers):
-        if op == "+":
-            result += nums.sum()
-        else:
-            result += nums.prod()
-    return result
+    return (
+        numbers.zipped(ops)
+        .mapped(
+            lambda nums_op: nums_op[0].sum() if nums_op[1] == "+" else nums_op[0].prod()
+        )
+        .sum()
+    )
 
 
 aoc_helper.lazy_test(day=6, year=2025, parse=parse_raw, solution=part_one)
@@ -61,9 +61,9 @@ def part_two(data=data):
     start = 0
     result = 0
     for op, nums in zip(ops, numbers):
-        width = max(nums.mapped(str).mapped(len))
+        width = nums.mapped(str).mapped(len).max()
         each_num = (
-            lines.mapped(lambda line: line[start : start + width])
+            lines.mapped(lambda line: list(line[start : start + width]))
             .transposition()
             .mapped("".join)
             .mapped(int)
