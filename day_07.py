@@ -35,29 +35,19 @@ data = parse_raw(raw)
 # force type inference to happen, AFAIK - but this won't work with standard
 # collections (list, set, dict, tuple)
 def part_one(data=data):
-    start = (0, 0)
-    for y, row in data.data.enumerated():
+    beams = set()
+    total = 0
+    for row in data.data:
         for x, cell in row.enumerated():
             if cell == "S":
-                start = (x, y)
-                break
-    splits = 0
-    todo = deque([start])
-    visited = set()
-    while todo:
-        x, y = todo.popleft()
-        if (x, y) in visited:
-            continue
-        visited.add((x, y))
-        if y >= data.data.len() - 1:
-            continue
-        if data[y + 1][x] == "^":
-            splits += 1
-            todo.append((x + 1, y + 1))
-            todo.append((x - 1, y + 1))
-        else:
-            todo.append((x, y + 1))
-    return splits
+                beams.add(x)
+            elif cell == "^":
+                if x in beams:
+                    beams.remove(x)
+                    beams.add(x - 1)
+                    beams.add(x + 1)
+                    total += 1
+    return total
 
 
 aoc_helper.lazy_test(day=7, year=2025, parse=parse_raw, solution=part_one)
@@ -67,35 +57,16 @@ aoc_helper.lazy_test(day=7, year=2025, parse=parse_raw, solution=part_one)
 # force type inference to happen, AFAIK - but this won't work with standard
 # collections (list, set, dict, tuple)
 def part_two(data=data):
-    start = (0, 0)
-    for y, row in data.data.enumerated():
+    beams = defaultdict(int)
+    for row in data.data:
         for x, cell in row.enumerated():
             if cell == "S":
-                start = (x, y)
-                break
-    splits = 0
-    todo = deque([(start, 1)])
-    while todo:
-        (x, y), count = todo.popleft()
-        if y >= data.data.len() - 1:
-            splits += count
-            continue
-        if data[y + 1][x] == "^":
-            for i, (pos, other_count) in enumerate(todo):
-                if pos == (x + 1, y + 1):
-                    todo[i] = (pos, other_count + count)
-                    break
-            else:
-                todo.append(((x + 1, y + 1), count))
-            for i, (pos, other_count) in enumerate(todo):
-                if pos == (x - 1, y + 1):
-                    todo[i] = (pos, other_count + count)
-                    break
-            else:
-                todo.append(((x - 1, y + 1), count))
-        else:
-            todo.append(((x, y + 1), count))
-    return splits
+                beams[x] += 1
+            elif cell == "^":
+                count = beams.pop(x, 0)
+                beams[x - 1] += count
+                beams[x + 1] += count
+    return sum(beams.values())
 
 
 aoc_helper.lazy_test(day=7, year=2025, parse=parse_raw, solution=part_two)
