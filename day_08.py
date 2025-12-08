@@ -46,8 +46,9 @@ def part_one(data=data, count: int = 1000):
         data.mapped(lambda loc: (loc, {loc})).iter().collect(dict)
     )
     for a, b in data.combinations(2).sorted(lambda locs: sqr_dist(*locs))[:count]:
-        for i in circuits[a] | circuits[b]:
-            circuits[i] |= circuits[a] | circuits[b]
+        circuit = circuits[a] | circuits[b]
+        for i in circuit:
+            circuits[i] = circuit
     largest = []
     for i in sorted(circuits.values(), key=len, reverse=True):
         if i not in largest:
@@ -95,10 +96,11 @@ def part_two(data=data):
     for a, b in data.combinations(2).sorted(lambda locs: sqr_dist(*locs)):
         if a in circuits[b]:
             continue
-        for i in circuits[a] | circuits[b]:
-            circuits[i] |= circuits[a] | circuits[b]
-        if len(circuits[a]) == len(data):
+        circuit = circuits[a] | circuits[b]
+        if len(circuit) == len(data):
             return a[0] * b[0]
+        for i in circuit:
+            circuits[i] = circuit
 
 
 aoc_helper.lazy_test(day=8, year=2025, parse=parse_raw, solution=part_two)
