@@ -45,11 +45,7 @@ def part_one(data=data, count: int = 1000):
     circuits: dict[Loc, set[Loc]] = (
         data.mapped(lambda loc: (loc, {loc})).iter().collect(dict)
     )
-    j = 0
-    for a, b in data.combinations(2).sorted(lambda locs: sqr_dist(*locs)):
-        j += 1
-        if j > count:
-            break
+    for a, b in data.combinations(2).sorted(lambda locs: sqr_dist(*locs))[:count]:
         for i in circuits[a] | circuits[b]:
             circuits[i] |= circuits[a] | circuits[b]
     largest = []
