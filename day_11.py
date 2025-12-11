@@ -25,7 +25,7 @@ raw = aoc_helper.fetch(11, 2025)
 
 
 def parse_raw(raw: str):
-    return (
+    return dict(
         list(raw.splitlines())
         .mapped(lambda i: i.split(": "))
         .mapped(lambda pair: (pair[0], list(pair[1].split())))
@@ -38,8 +38,7 @@ data = parse_raw(raw)
 # providing this default is somewhat of a hack - there isn't any other way to
 # force type inference to happen, AFAIK - but this won't work with standard
 # collections (list, set, dict, tuple)
-def part_one(data=data):
-    data = dict(data)
+def part_one(data: dict[str, list[str]] = data):
     paths = defaultdict(int)
     paths["you"] = 1
     now = {"you"}
@@ -62,8 +61,7 @@ aoc_helper.lazy_test(day=11, year=2025, parse=parse_raw, solution=part_one)
 # providing this default is somewhat of a hack - there isn't any other way to
 # force type inference to happen, AFAIK - but this won't work with standard
 # collections (list, set, dict, tuple)
-def part_two(data=data):
-    data = dict(data)
+def part_two(data: dict[str, list[str]] = data):
     paths = defaultdict(int)
     paths["svr", False, False] = 1
     now = {("svr", False, False)}
