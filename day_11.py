@@ -46,9 +46,9 @@ def part_one(data=data):
     while now and now != {"out"}:
         next_now = set()
         for server in now:
-            count = paths[server]
             if server == "out":
                 continue
+            count = paths.pop(server)
             for next in data[server]:
                 paths[next] += count
                 next_now.add(next)
@@ -65,15 +65,14 @@ aoc_helper.lazy_test(day=11, year=2025, parse=parse_raw, solution=part_one)
 def part_two(data=data):
     data = dict(data)
     paths = defaultdict(int)
-    paths[("svr", False, False)] = 1
+    paths["svr", False, False] = 1
     now = {("svr", False, False)}
     while now:
         next_now = set()
         for server, fft, dac in now:
-            count = paths[server, fft, dac]
             if server == "out":
                 continue
-            paths[server, fft, dac] = 0
+            count = paths.pop((server, fft, dac))
             if server == "fft":
                 fft = True
             if server == "dac":
@@ -82,7 +81,7 @@ def part_two(data=data):
                 paths[next, fft, dac] += count
                 next_now.add((next, fft, dac))
         now = next_now
-    return paths[("out", True, True)]
+    return paths["out", True, True]
 
 
 aoc_helper.lazy_test(day=11, year=2025, parse=parse_raw, solution=part_two)
